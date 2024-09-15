@@ -1,45 +1,52 @@
 import { ScheduleAppnmtDTO } from "../dto/ScheduleAppnmtDTO";
-import IAppointment from "../interfaces/IAppointment";
 import { AppointmentStatus } from "../enums/AppointmentStatus";
+import { Appointment } from "../entities/Appointment";
+import { AppDataSource } from "../config/data-source";
+import { User } from "../entities/User";
 
-const appointmentsDB: IAppointment[] = [];
-let id: number = 1;
+const AppointmentEntity = AppDataSource.getRepository(Appointment);
 
-const getAllAppointmentsService = async (): Promise<IAppointment[]> => {
-  return appointmentsDB;
+const getAllAppointmentsService = async (): Promise<Appointment[]> => {
+  const allAppntmts = await AppointmentEntity.find({
+    relations: { user: true },
+  });
+  return allAppntmts;
 };
 
 const getAppointmentByIdService = async (
   id: number
-): Promise<IAppointment | undefined> => {
-  return appointmentsDB.find((appnmt) => appnmt.id === Number(id));
+): Promise<Appointment | null> => {
+  return await AppointmentEntity.findOneBy({ id });
 };
 
 const scheduleAppointmentService = async (
   appnmtData: ScheduleAppnmtDTO
-): Promise<IAppointment> => {
+): Promise<Appointment | null> => {
   const { userId, date, time } = appnmtData;
 
-  const newAppnmt: IAppointment = {
-    id,
-    date,
-    time,
-    userId,
-    status: AppointmentStatus.ACTIVE,
-  };
+  const userFound = await AppDataSource.getRepository(User).findOneBy({
+    id: userId,
+  });
 
-  id++;
-  appointmentsDB.push(newAppnmt);
-  return newAppnmt;
+  if (userFound) {
+    const newAppnmt: Appointment = AppointmentEntity.create({
+      date,
+      time,
+      user: userFound,
+    });
+
+    await AppointmentEntity.save(newAppnmt);
+    return newAppnmt;
+  }
+  return null;
 };
 
-const cancelAppointmentService = async (
-  id: number
-): Promise<IAppointment[]> => {
-  appointmentsDB.forEach((appnmt) => {
-    if (appnmt.id === Number(id)) appnmt.status = AppointmentStatus.CANCELLED;
-  });
-  return appointmentsDB;
+const cancelAppointmentService = async (id: number): Promise<void> => {
+  const appnmt = await getAppointmentByIdService(id);
+  if (appnmt) {
+    appnmt.status = AppointmentStatus.CANCELLED;
+    await AppointmentEntity.save(appnmt);
+  }
 };
 
 export {

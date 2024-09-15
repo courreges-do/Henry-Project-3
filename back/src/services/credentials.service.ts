@@ -1,22 +1,20 @@
 import { CredentialsDTO } from "../dto/CredentialsDTO";
-import ICredential from "../interfaces/ICredential";
+import { AppDataSource } from "../config/data-source";
+import { Credential } from "../entities/Credential";
 
-const credentialsDB: ICredential[] = [];
-let id: number = 1;
+const CredentialEntity = AppDataSource.getRepository(Credential);
 
 const createCredentialsService = async (
   credentials: CredentialsDTO
-): Promise<number> => {
+): Promise<Credential> => {
   const { username, password } = credentials;
 
-  const newCredentials: ICredential = {
-    id,
+  const newCredentials: Credential = CredentialEntity.create({
     username,
     password,
-  };
-  id++;
-  credentialsDB.push(newCredentials);
-  return newCredentials.id;
+  });
+  await CredentialEntity.save(newCredentials);
+  return newCredentials;
 };
 
 const checkCredentialsService = async (
@@ -24,14 +22,10 @@ const checkCredentialsService = async (
 ): Promise<number> => {
   const { username, password } = credentials;
 
-  const credsFound: ICredential | undefined = credentialsDB.find(
-    (cred): boolean => cred.username === username
-  );
-
-  if (credsFound) {
-    if (credsFound.password === password) return credsFound.id;
-    return 0;
-  } else return 0;
+  const credsFound: Credential | null = await CredentialEntity.findOne({
+    where: { username },
+  });
+  if (credsFound?.password === password) return credsFound.user.id;
+  else return 0;
 };
-
 export { createCredentialsService, checkCredentialsService };

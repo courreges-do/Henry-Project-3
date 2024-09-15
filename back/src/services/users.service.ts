@@ -1,35 +1,37 @@
 import { CreateUserDTO } from "../dto/CreateUserDTO";
-import IUser from "../interfaces/IUser";
 import { createCredentialsService } from "./credentials.service";
+import { User } from "../entities/User";
+import { AppDataSource } from "../config/data-source";
 
-const usersDB: IUser[] = [];
-let id: number = 1;
+const UserEntity = AppDataSource.getRepository(User);
 
-const getAllUsersService = async (): Promise<IUser[]> => {
-  return usersDB;
+const getAllUsersService = async (): Promise<User[]> => {
+  const users: User[] = await UserEntity.find({
+    relations: { credential: true },
+  });
+  return users;
 };
 
-const getUserByIdService = async (id: number): Promise<IUser | undefined> => {
-  const foundUser = usersDB.find((usr) => usr.id === Number(id));
+const getUserByIdService = async (id: number): Promise<User | null> => {
+  const foundUser = await UserEntity.findOneBy({ id });
   return foundUser;
 };
 
 const newUserService = async (userdata: CreateUserDTO) => {
   const { username, password, name, email, birthdate, nDni } = userdata;
 
-  const credentialsID = await createCredentialsService({ username, password });
+  const newCredentials = await createCredentialsService({ username, password });
 
-  const newUser: IUser = {
-    id,
+  const newUser: User = UserEntity.create({
     name,
     email,
     birthdate,
     nDni,
-    credentialsId: credentialsID,
-  };
+    credential: newCredentials,
+  });
 
-  id++;
-  usersDB.push(newUser);
+  newCredentials.user = newUser;
+  await UserEntity.save(newUser);
 
   return newUser;
 };
