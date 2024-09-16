@@ -24,6 +24,7 @@ const checkCredentialsService = async (
 
   const credsFound: Credential | null = await CredentialEntity.findOne({
     where: { username },
+    relations: ["user"],
   });
   if (credsFound?.password === password) return credsFound.user.id;
   else return 0;
