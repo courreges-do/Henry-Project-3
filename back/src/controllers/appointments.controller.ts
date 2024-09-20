@@ -10,33 +10,62 @@ const getAllAppointments = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  const allAppointments = await getAllAppointmentsService();
-  return res.status(200).json(allAppointments);
+  try {
+    const allAppointments = await getAllAppointmentsService();
+    return allAppointments.length
+      ? res.status(200).json(allAppointments)
+      : res
+          .status(404)
+          .json({ message: "There are no appointments registered" });
+  } catch (error) {
+    return res.status(500).json({ message: "Server error", error });
+  }
 };
 const getAppointmentById = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  const { id } = req.params;
-  const appnmtById = await getAppointmentByIdService(Number(id));
-  return res.status(200).json(appnmtById);
+  try {
+    const { id } = req.params;
+    const appnmtById = await getAppointmentByIdService(Number(id));
+    return appnmtById
+      ? res.status(200).json(appnmtById)
+      : res.status(404).json({ error: "There is no appointment with that ID" });
+  } catch (error) {
+    return res.status(500).json({ message: "Server error", error });
+  }
 };
 const scheduleNewAppointment = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  const { userId, date, time } = req.body;
-
-  const newAppnmt = await scheduleAppointmentService({ userId, date, time });
-  return res.status(200).json({ message: "Success", newAppnmt });
+  try {
+    const { userId, date, time } = req.body;
+    if (!userId || !date || !time)
+      return res
+        .status(400)
+        .json({ error: "Incomplete data, missing information" });
+    const newAppnmt = await scheduleAppointmentService({ userId, date, time });
+    return newAppnmt
+      ? res.status(200).json({ message: "Success", newAppnmt })
+      : res.status(400).json({ error: "The user does not exist" });
+  } catch (error) {
+    return res.status(500).json({ message: "Server error", error });
+  }
 };
 const cancelAppointment = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  const { id } = req.params;
-  await cancelAppointmentService(Number(id));
-  return res.status(200).json({ message: "Appointment cancelled" });
+  try {
+    const { id } = req.params;
+    const appnmt = await cancelAppointmentService(Number(id));
+    return appnmt
+      ? res.status(200).json(appnmt)
+      : res.status(404).json({ error: "There is no appointment with that ID" });
+  } catch (error) {
+    return res.status(500).json({ message: "Server error", error });
+  }
 };
 
 export {

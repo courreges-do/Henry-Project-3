@@ -2,19 +2,22 @@ import { CreateUserDTO } from "../dto/CreateUserDTO";
 import { createCredentialsService } from "./credentials.service";
 import { User } from "../entities/User";
 import { AppDataSource } from "../config/data-source";
+import { Credential } from "../entities/Credential";
 
 const UserEntity = AppDataSource.getRepository(User);
 
 const getAllUsersService = async (): Promise<User[]> => {
   const users: User[] = await UserEntity.find({
-    relations: { credential: true },
+    relations: { credential: false, appointments: true },
   });
   return users;
 };
 
 const getUserByIdService = async (id: number): Promise<User | null> => {
-  const foundUser = await UserEntity.findOneBy({ id });
-  return foundUser;
+  return await UserEntity.findOne({
+    where: { id },
+    relations: { appointments: true },
+  });
 };
 
 const newUserService = async (userdata: CreateUserDTO) => {
@@ -32,6 +35,7 @@ const newUserService = async (userdata: CreateUserDTO) => {
 
   newCredentials.user = newUser;
   await UserEntity.save(newUser);
+  await AppDataSource.getRepository(Credential).save(newCredentials);
 
   return newUser;
 };

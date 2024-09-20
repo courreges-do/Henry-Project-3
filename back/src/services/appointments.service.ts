@@ -16,7 +16,10 @@ const getAllAppointmentsService = async (): Promise<Appointment[]> => {
 const getAppointmentByIdService = async (
   id: number
 ): Promise<Appointment | null> => {
-  return await AppointmentEntity.findOneBy({ id });
+  return await AppointmentEntity.findOne({
+    where: { id },
+    relations: { user: true },
+  });
 };
 
 const scheduleAppointmentService = async (
@@ -41,12 +44,15 @@ const scheduleAppointmentService = async (
   return null;
 };
 
-const cancelAppointmentService = async (id: number): Promise<void> => {
+const cancelAppointmentService = async (
+  id: number
+): Promise<Appointment | null> => {
   const appnmt = await getAppointmentByIdService(id);
   if (appnmt) {
     appnmt.status = AppointmentStatus.CANCELLED;
     await AppointmentEntity.save(appnmt);
-  }
+    return appnmt;
+  } else return null;
 };
 
 export {
