@@ -4,6 +4,10 @@ import MyAppointment from "../MyAppointment/MyAppointment";
 
 const MyAppointments = () => {
   const [appointments] = useState(myAppointments.appointments);
+
+  const handleStatusAppnmt = (id) => {
+    console.log(id);
+  };
   return (
     <>
       {appointments.map((appnmnt) => (
@@ -12,6 +16,7 @@ const MyAppointments = () => {
           date={appnmnt.date}
           time={appnmnt.time}
           status={appnmnt.status}
+          handleStatusAppnmt={() => handleStatusAppnmt(appnmnt.id)}
         />
       ))}
     </>

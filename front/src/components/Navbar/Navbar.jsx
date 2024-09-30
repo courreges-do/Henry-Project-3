@@ -1,4 +1,4 @@
-import { Container } from "./styled";
+import { Container, ButtonContainer, Button } from "./styled";
 
 const Navbar = () => {
   const handleNewAppointment = () => {};
@@ -7,11 +7,13 @@ const Navbar = () => {
   return (
     <Container>
       <h2>Digital Art Experience Appointments</h2>
-      <div>
-        <button onClick={handleNewAppointment}>New Appointment</button>
-        <button onClick={handleMyProfile}>My Profile</button>
-        <button onClick={handleAboutUs}>About Us</button>
-      </div>
+      <ButtonContainer>
+        <div>
+          <Button onClick={handleNewAppointment}>New Appointment</Button>
+          <Button onClick={handleMyProfile}>My Profile</Button>
+          <Button onClick={handleAboutUs}>About Us</Button>
+        </div>
+      </ButtonContainer>
     </Container>
   );
 };
