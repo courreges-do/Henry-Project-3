@@ -7,7 +7,9 @@ const MyAppointment = ({ date, time, status, handleStatusAppnmt }) => {
       <p> {date} </p>
       <p> {time} </p>
       <p> {status} </p>
-      <button onClick={handleStatusAppnmt}> Cancel Appointment </button>
+      <button onClick={handleStatusAppnmt} disabled={status === "cancelled"}>
+        Cancel Appointment
+      </button>
     </ApContainer>
   );
 };
