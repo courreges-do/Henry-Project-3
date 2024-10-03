@@ -3,9 +3,11 @@ import {
   Entity,
   JoinColumn,
   OneToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Credential } from "./Credential";
+import { Appointment } from "./Appointment";
 
 @Entity({
   name: "users",
@@ -17,7 +19,7 @@ export class User {
   name: string;
   @Column()
   email: string;
-  @Column({ type: Date })
+  @Column({ type: "date" })
   birthdate: Date;
   @Column()
   nDni: number;
@@ -26,5 +28,6 @@ export class User {
   @JoinColumn()
   credential: Credential;
 
-  appointments: [];
+  @OneToMany(() => Appointment, (appointment) => appointment.user)
+  appointments: Appointment[];
 }
