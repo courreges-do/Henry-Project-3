@@ -1,4 +1,3 @@
-//import { myAppointments } from "../../helpers/myAppointments";
 import { useState } from "react";
 import MyAppointment from "../MyAppointment/MyAppointment";
 import { useEffect } from "react";
@@ -37,6 +36,7 @@ const MyAppointments = () => {
           key={appnmnt.id}
           date={appnmnt.date}
           time={appnmnt.time}
+          type={appnmnt.type}
           status={appnmnt.status}
           handleStatusAppnmt={() => handleStatusAppnmt(appnmnt.id)}
         />
