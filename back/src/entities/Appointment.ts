@@ -1,6 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { AppointmentStatus } from "../enums/AppointmentStatus";
 import { User } from "./User";
+import { AppointmentType } from "../enums/AppointmentType";
 
 @Entity({
   name: "appointments",
@@ -16,6 +17,12 @@ export class Appointment {
 
   @Column()
   time: string;
+
+  @Column({
+    type: "enum",
+    enum: AppointmentType,
+  })
+  type: AppointmentType;
 
   @Column({
     type: "enum",

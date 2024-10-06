@@ -40,12 +40,17 @@ const scheduleNewAppointment = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const { userId, date, time } = req.body;
-    if (!userId || !date || !time)
+    const { userId, date, time, type } = req.body;
+    if (!userId || !date || !time || !type)
       return res
         .status(400)
         .json({ error: "Incomplete data, missing information" });
-    const newAppnmt = await scheduleAppointmentService({ userId, date, time });
+    const newAppnmt = await scheduleAppointmentService({
+      userId,
+      date,
+      time,
+      type,
+    });
     return newAppnmt
       ? res.status(200).json({ message: "Success", newAppnmt })
       : res.status(400).json({ error: "The user does not exist" });

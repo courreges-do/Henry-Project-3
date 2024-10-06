@@ -1,6 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 import { validateLoginForm } from "../../helpers/validateLoginForm";
+import { Link } from "react-router-dom";
+import { REGISTER } from "../../helpers/pathsRoutes";
 
 const LoginForm = () => {
   const [errors, setErrors] = useState({});
@@ -25,8 +27,7 @@ const LoginForm = () => {
       await axios.post("http://localhost:3000/users/login", userData);
       alert("User logged in successfully");
     } catch (error) {
-      console.log(error);
-      alert("User data is incorrect");
+      alert("User data is incorrect", error);
     }
   };
   const handleBlur = (event) => {
@@ -72,6 +73,9 @@ const LoginForm = () => {
         </div>
         <button type="submit">Sign in</button>
       </form>
+      <p>
+        Sign Up <Link to={REGISTER}>HERE</Link> if you are not registered
+      </p>
     </>
   );
 };

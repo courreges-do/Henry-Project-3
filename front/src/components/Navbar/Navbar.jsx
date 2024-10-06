@@ -1,17 +1,29 @@
+import { LOGIN, REGISTER, MY_APPOINTMENTS } from "../../helpers/pathsRoutes";
 import { Container, ButtonContainer, Button } from "./styled";
+import { useLocation, Link } from "react-router-dom";
 
 const Navbar = () => {
+  const { pathname } = useLocation();
+
   const handleNewAppointment = () => {};
-  const handleMyProfile = () => {};
-  const handleAboutUs = () => {};
+  const handleMyAppointments = () => {};
+  const handleLogout = () => {};
   return (
     <Container>
       <h2>Digital Art Experience Appointments</h2>
       <ButtonContainer>
         <div>
-          <Button onClick={handleNewAppointment}>New Appointment</Button>
-          <Button onClick={handleMyProfile}>My Profile</Button>
-          <Button onClick={handleAboutUs}>About Us</Button>
+          <Link to={REGISTER}>
+            <Button onClick={handleNewAppointment}>New Appointment</Button>{" "}
+          </Link>
+          <Link to={MY_APPOINTMENTS}>
+            <Button onClick={handleMyAppointments}>My Appointments</Button>{" "}
+          </Link>
+          {pathname === MY_APPOINTMENTS && (
+            <Link to={LOGIN}>
+              <Button onClick={handleLogout}>Sign out</Button>{" "}
+            </Link>
+          )}
         </div>
       </ButtonContainer>
     </Container>

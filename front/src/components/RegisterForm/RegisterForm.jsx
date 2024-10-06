@@ -1,6 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 import { validateRegisterForm } from "../../helpers/validateRegisterForm";
+import { Link } from "react-router-dom";
+import { LOGIN } from "../../helpers/pathsRoutes";
 
 const RegisterForm = () => {
   const [errors, setErrors] = useState({});
@@ -164,6 +166,9 @@ const RegisterForm = () => {
         </div>
         <button type="submit">Register</button>
       </form>
+      <p>
+        Sign In <Link to={LOGIN}>HERE</Link> if you have an existing account
+      </p>
     </>
   );
 };

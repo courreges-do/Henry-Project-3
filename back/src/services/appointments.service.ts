@@ -25,7 +25,7 @@ const getAppointmentByIdService = async (
 const scheduleAppointmentService = async (
   appnmtData: ScheduleAppnmtDTO
 ): Promise<Appointment | null> => {
-  const { userId, date, time } = appnmtData;
+  const { userId, date, time, type } = appnmtData;
 
   const userFound = await AppDataSource.getRepository(User).findOneBy({
     id: userId,
@@ -35,6 +35,7 @@ const scheduleAppointmentService = async (
     const newAppnmt: Appointment = AppointmentEntity.create({
       date,
       time,
+      type,
       user: userFound,
     });
 
