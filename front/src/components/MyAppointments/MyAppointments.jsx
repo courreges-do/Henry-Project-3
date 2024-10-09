@@ -1,29 +1,23 @@
-import { useState } from "react";
 import MyAppointment from "../MyAppointment/MyAppointment";
-import { useEffect } from "react";
-import axios from "axios";
+import { useUserAppointmentsQuery } from "../../redux/features/users/usersApi";
+import { useSelector } from "react-redux";
+import { useCancelAppointmentMutation } from "../../redux/features/appointments/appointmentsApi";
 
 const MyAppointments = () => {
-  const [appointments, setAppointments] = useState([]);
-  const [flag, setFlag] = useState(false);
+  const [cancelAppointment] = useCancelAppointmentMutation();
+  const loggedInUser = useSelector((state) => state.usersSlice.user.id);
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/appointments/")
-      .then((resp) => {
-        const sortDates = resp.data.sort(
-          (a, b) => new Date(a.date) - new Date(b.date)
-        );
-        setAppointments(sortDates);
-      })
-      .catch((error) => alert(error));
-    return () => setAppointments([]);
-  }, [flag]);
+  const {
+    data: dataUserById,
+    isLoading: isLoadingUserById,
+    error: errorUserById,
+    refetch,
+  } = useUserAppointmentsQuery(Number(loggedInUser));
 
   const handleStatusAppnmt = async (id) => {
     try {
-      await axios.put(`http://localhost:3000/appointments/cancel/${id}`);
-      setFlag(!flag);
+      await cancelAppointment(id);
+      refetch();
     } catch (error) {
       alert(error.response.data.error);
     }
@@ -31,16 +25,20 @@ const MyAppointments = () => {
 
   return (
     <>
-      {appointments.map((appnmnt) => (
-        <MyAppointment
-          key={appnmnt.id}
-          date={appnmnt.date}
-          time={appnmnt.time}
-          type={appnmnt.type}
-          status={appnmnt.status}
-          handleStatusAppnmt={() => handleStatusAppnmt(appnmnt.id)}
-        />
-      ))}
+      {isLoadingUserById
+        ? "Loading appointments..."
+        : errorUserById
+        ? "Error when loading appointments"
+        : dataUserById?.appointments?.map((appnmnt) => (
+            <MyAppointment
+              key={appnmnt.id}
+              date={appnmnt.date}
+              time={appnmnt.time}
+              type={appnmnt.type}
+              status={appnmnt.status}
+              handleStatusAppnmt={() => handleStatusAppnmt(appnmnt.id)}
+            />
+          ))}
     </>
   );
 };

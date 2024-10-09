@@ -1,10 +1,12 @@
 import { useState } from "react";
 import axios from "axios";
 import { validateRegisterForm } from "../../helpers/validateRegisterForm";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LOGIN } from "../../helpers/pathsRoutes";
+import { FormWrapper, Input, ErrorMessage } from "./styled";
 
 const RegisterForm = () => {
+  const navigate = useNavigate();
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [newUserData, setNewUserData] = useState({
@@ -42,6 +44,7 @@ const RegisterForm = () => {
           birthdate: "",
           nDni: "",
         });
+        navigate(LOGIN);
       } else return alert("The form has errors");
     } catch (error) {
       alert(error.response.data.error);
@@ -56,13 +59,13 @@ const RegisterForm = () => {
     });
   };
   return (
-    <>
+    <FormWrapper>
       <h2>Sign up to unlock new experiences</h2>
       <form onSubmit={submitRegisterForm}>
         <div>
           <label>
             Name:
-            <input
+            <Input
               name="name"
               type="text"
               value={newUserData.name}
@@ -71,13 +74,13 @@ const RegisterForm = () => {
             />
           </label>
           {touched.name && errors.name && (
-            <p style={{ color: "red" }}> {errors.name} </p>
+            <ErrorMessage> {errors.name} </ErrorMessage>
           )}
         </div>
         <div>
           <label>
             Email:
-            <input
+            <Input
               name="email"
               type="email"
               value={newUserData.email}
@@ -86,13 +89,13 @@ const RegisterForm = () => {
             />
           </label>
           {touched.email && errors.email && (
-            <p style={{ color: "red" }}> {errors.email} </p>
+            <ErrorMessage> {errors.email} </ErrorMessage>
           )}
         </div>
         <div>
           <label>
             Birth Date:
-            <input
+            <Input
               name="birthdate"
               type="date"
               value={newUserData.birthdate}
@@ -101,13 +104,13 @@ const RegisterForm = () => {
             />
           </label>
           {touched.birthdate && errors.birthdate && (
-            <p style={{ color: "red" }}> {errors.birthdate} </p>
+            <ErrorMessage> {errors.birthdate} </ErrorMessage>
           )}
         </div>
         <div>
           <label>
             DNI Number:
-            <input
+            <Input
               name="nDni"
               type="number"
               value={newUserData.nDni}
@@ -116,13 +119,13 @@ const RegisterForm = () => {
             />
           </label>
           {touched.nDni && errors.nDni && (
-            <p style={{ color: "red" }}> {errors.nDni} </p>
+            <ErrorMessage> {errors.nDni} </ErrorMessage>
           )}
         </div>
         <div>
           <label>
             Username:
-            <input
+            <Input
               name="username"
               type="text"
               value={newUserData.username}
@@ -131,13 +134,13 @@ const RegisterForm = () => {
             />
           </label>
           {touched.username && errors.username && (
-            <p style={{ color: "red" }}> {errors.username} </p>
+            <ErrorMessage> {errors.username} </ErrorMessage>
           )}
         </div>
         <div>
           <label>
             Password:
-            <input
+            <Input
               name="password"
               type="password"
               value={newUserData.password}
@@ -146,13 +149,13 @@ const RegisterForm = () => {
             />
           </label>
           {touched.password && errors.password && (
-            <p style={{ color: "red" }}> {errors.password} </p>
+            <ErrorMessage> {errors.password} </ErrorMessage>
           )}
         </div>
         <div>
           <label>
             Repeat Password:
-            <input
+            <Input
               name="repeatPassword"
               type="password"
               value={newUserData.repeatPassword}
@@ -161,7 +164,7 @@ const RegisterForm = () => {
             />
           </label>
           {touched.repeatPassword && errors.repeatPassword && (
-            <p style={{ color: "red" }}> {errors.repeatPassword} </p>
+            <ErrorMessage> {errors.repeatPassword} </ErrorMessage>
           )}
         </div>
         <button type="submit">Register</button>
@@ -169,7 +172,7 @@ const RegisterForm = () => {
       <p>
         Sign In <Link to={LOGIN}>HERE</Link> if you have an existing account
       </p>
-    </>
+    </FormWrapper>
   );
 };
 

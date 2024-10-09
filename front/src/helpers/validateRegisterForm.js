@@ -9,7 +9,7 @@ export const validateRegisterForm = (userData) => {
 
   if (!userData.email) {
     errors.email = "Email is required";
-  } else if (!/\S+@\S+\. \S+/.test(userData.email)) {
+  } else if (!/\S+@\S+\.\S+/.test(userData.email)) {
     errors.email = "Email format required";
   }
 

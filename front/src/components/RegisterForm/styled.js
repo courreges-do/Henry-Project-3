@@ -1,0 +1,24 @@
+import styled from "styled-components";
+
+export const FormWrapper = styled.div`
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 0.1px 15px;
+  background-color: #f7f7f7;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+export const Input = styled.input`
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  font-size: 16px;
+`;
+
+export const ErrorMessage = styled.p`
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+`;

@@ -1,10 +1,17 @@
 import { useState } from "react";
-import axios from "axios";
 import { validateLoginForm } from "../../helpers/validateLoginForm";
-import { Link } from "react-router-dom";
-import { REGISTER } from "../../helpers/pathsRoutes";
+import { Link, useNavigate } from "react-router-dom";
+import { REGISTER, HOME } from "../../helpers/pathsRoutes";
+import { useLoginUserMutation } from "../../redux/features/users/usersApi";
+import { setCredentials } from "../../redux/features/users/usersSlice";
+import { useDispatch } from "react-redux";
+import { FormWrapper, Input, ErrorMessage } from "./styled";
 
 const LoginForm = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [loginUser] = useLoginUserMutation();
+
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [userData, setUserData] = useState({
@@ -24,8 +31,9 @@ const LoginForm = () => {
   const handleSubmitLogin = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:3000/users/login", userData);
-      alert("User logged in successfully");
+      const user = await loginUser(userData).unwrap();
+      dispatch(setCredentials(user));
+      navigate(HOME);
     } catch (error) {
       alert("User data is incorrect", error);
     }
@@ -38,13 +46,13 @@ const LoginForm = () => {
     });
   };
   return (
-    <>
+    <FormWrapper>
       <h2>Sign in to your new adventure</h2>
       <form onSubmit={handleSubmitLogin}>
         <div>
           <label>
             Username:
-            <input
+            <Input
               name="username"
               type="text"
               value={userData.username}
@@ -53,13 +61,13 @@ const LoginForm = () => {
             />
           </label>
           {touched.username && errors.username && (
-            <p style={{ color: "red" }}> {errors.username} </p>
+            <ErrorMessage> {errors.username} </ErrorMessage>
           )}
         </div>
         <div>
           <label>
             Password:
-            <input
+            <Input
               name="password"
               type="password"
               value={userData.password}
@@ -68,7 +76,7 @@ const LoginForm = () => {
             />
           </label>
           {touched.password && errors.password && (
-            <p style={{ color: "red" }}> {errors.password} </p>
+            <ErrorMessage> {errors.password} </ErrorMessage>
           )}
         </div>
         <button type="submit">Sign in</button>
@@ -76,7 +84,7 @@ const LoginForm = () => {
       <p>
         Sign Up <Link to={REGISTER}>HERE</Link> if you are not registered
       </p>
-    </>
+    </FormWrapper>
   );
 };
 
