@@ -27,3 +27,9 @@ export const Select = styled.select`
   font-size: 16px;
   margin-bottom: 10px;
 `;
+
+export const ErrorMessage = styled.p`
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+`;
