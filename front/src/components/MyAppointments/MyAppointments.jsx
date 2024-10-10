@@ -2,6 +2,7 @@ import MyAppointment from "../MyAppointment/MyAppointment";
 import { useUserAppointmentsQuery } from "../../redux/features/users/usersApi";
 import { useSelector } from "react-redux";
 import { useCancelAppointmentMutation } from "../../redux/features/appointments/appointmentsApi";
+import { validateCancellation } from "../../helpers/validateCancellation";
 
 const MyAppointments = () => {
   const [cancelAppointment] = useCancelAppointmentMutation();
@@ -14,7 +15,12 @@ const MyAppointments = () => {
     refetch,
   } = useUserAppointmentsQuery(Number(loggedInUser));
 
-  const handleStatusAppnmt = async (id) => {
+  const handleStatusAppnmt = async (id, appointmentDate) => {
+    const errors = validateCancellation(appointmentDate);
+    if (Object.keys(errors).length > 0) {
+      alert(errors.cancel);
+      return;
+    }
     try {
       await cancelAppointment(id);
       refetch();
@@ -36,7 +42,9 @@ const MyAppointments = () => {
               time={appnmnt.time}
               type={appnmnt.type}
               status={appnmnt.status}
-              handleStatusAppnmt={() => handleStatusAppnmt(appnmnt.id)}
+              handleStatusAppnmt={() =>
+                handleStatusAppnmt(appnmnt.id, appnmnt.date)
+              }
             />
           ))}
     </>

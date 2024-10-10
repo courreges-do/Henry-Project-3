@@ -24,7 +24,7 @@ const NewAppointmentForm = () => {
 
   const { refetch } = useUserAppointmentsQuery(user.id);
 
-  const businessHours = { opening: 9, closing: 21 };
+  const businessHours = { opening: 16, closing: 21 };
 
   const [appointment, setAppointment] = useState({
     date: "",

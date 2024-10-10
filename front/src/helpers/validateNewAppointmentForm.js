@@ -6,9 +6,14 @@ export const validateNewAppointmentForm = (appointment, businessHours) => {
   } else {
     const selectedDate = new Date(appointment.date);
     const today = new Date();
-
-    if (selectedDate < today) {
-      errors.date = "Date cannot be in the past";
+    today.setHours(0, 0, 0, 0);
+    if (selectedDate <= today) {
+      errors.date = "Date cannot be in the past or today";
+    } else {
+      const dayOfWeek = selectedDate.getDay();
+      if (dayOfWeek === 0 || dayOfWeek === 6) {
+        errors.date = "Appointments cannot be scheduled on weekends";
+      }
     }
   }
 

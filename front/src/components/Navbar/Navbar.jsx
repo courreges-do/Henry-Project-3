@@ -6,47 +6,41 @@ import {
   NEW_APPOINTMENT,
 } from "../../helpers/pathsRoutes";
 import { Container, ButtonContainer, Button } from "./styled";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import { logout } from "../../redux/features/users/usersSlice";
 import { useDispatch } from "react-redux";
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
+  const navigate = useNavigate();
 
-  const handleHome = () => {};
-  const handleNewAppointment = () => {};
-  const handleMyAppointments = () => {};
   const handleLogout = () => {
     dispatch(logout());
+    navigate(LOGIN);
   };
+
   return (
     <Container>
       <h2>Digital Art Experience Appointments</h2>
-      <ButtonContainer>
-        <div>
-          {pathname !== LOGIN && pathname !== REGISTER && (
+      {pathname !== LOGIN && pathname !== REGISTER && (
+        <ButtonContainer>
+          <div>
             <Link to={HOME}>
-              <Button onClick={handleHome}>Home</Button>
+              <Button>Home</Button>
             </Link>
-          )}
-          {pathname !== LOGIN && pathname !== REGISTER && (
             <Link to={NEW_APPOINTMENT}>
-              <Button onClick={handleNewAppointment}>New Appointment</Button>
+              <Button>New Appointment</Button>
             </Link>
-          )}
-          {pathname !== LOGIN && pathname !== REGISTER && (
             <Link to={MY_APPOINTMENTS}>
-              <Button onClick={handleMyAppointments}>My Appointments</Button>
+              <Button>My Appointments</Button>
             </Link>
-          )}
-          {pathname !== LOGIN && pathname !== REGISTER && (
-            <Link to={LOGIN}>
-              <Button onClick={handleLogout}>Sign out</Button>
+            <Link to={LOGIN} onClick={handleLogout}>
+              <Button>Sign out</Button>
             </Link>
-          )}
-        </div>
-      </ButtonContainer>
+          </div>
+        </ButtonContainer>
+      )}
     </Container>
   );
 };

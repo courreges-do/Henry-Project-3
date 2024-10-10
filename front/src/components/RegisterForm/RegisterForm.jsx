@@ -47,14 +47,15 @@ const RegisterForm = () => {
         navigate(LOGIN);
       } else return alert("The form has errors");
     } catch (error) {
-      alert(error.response.data.error);
+      const errorMessage = error.response?.data?.error || "Registration failed";
+      alert(errorMessage);
     }
   };
 
   const handleBlur = (event) => {
     const { name } = event.target;
     setTouched({
-      ...newUserData,
+      ...touched,
       [name]: true,
     });
   };

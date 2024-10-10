@@ -6,7 +6,7 @@ const Presentation = () => {
       <div>
         <h1>Welcome to the Suzume Digital Art Experience</h1>
         <p>
-          Were are an international art collective that seeks to navigate the
+          We are an international art collective that seeks to navigate the
           confluence of art, science, technology and the natural world. We
           invite you to explore the relationship between the self and the world,
           and also new forms of perception.

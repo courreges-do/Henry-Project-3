@@ -41,7 +41,7 @@ const LoginForm = () => {
   const handleBlur = (event) => {
     const { name } = event.target;
     setTouched({
-      ...userData,
+      ...touched,
       [name]: true,
     });
   };
